@@ -444,7 +444,7 @@
 //  CONFIGURAZIONE — inserisci il tuo Access Key Web3Forms
 //  Ottieni la chiave gratuita su: https://web3forms.com
 // ============================================================
-const WEB3FORMS_KEY = '3a4e3eba-75a5-4613-b977-da7607dde344';
+const FORMSPREE_ENDPOINT = 'INSERISCI_IL_TUO_ENDPOINT_FORMSPREE';
 
 // ============================================================
 //  UTILITY
@@ -953,8 +953,8 @@ async function saveSimulation() {
 //  INVIA EMAIL tramite Web3Forms
 // ============================================================
 async function sendEmail(data) {
-  if (WEB3FORMS_KEY === 'INSERISCI_IL_TUO_ACCESS_KEY') {
-    console.warn('Web3Forms key non configurata \u2014 email non inviata.');
+  if (FORMSPREE_ENDPOINT === 'INSERISCI_IL_TUO_ENDPOINT_FORMSPREE') {
+    console.warn('Endpoint Formspree non configurato.');
     return;
   }
   const smL = {
@@ -996,17 +996,26 @@ async function sendEmail(data) {
     detail,
   ].join('\n');
 
-  const res = await fetch('https://api.web3forms.com/submit', {
+  const res = await fetch(FORMSPREE_ENDPOINT, {
     method:  'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     body:    JSON.stringify({
-      access_key: WEB3FORMS_KEY,
-      subject:    '[SRD05] ' + data.ragioneSociale + ' \u2013 ' + data.cuaa,
+      email:      data.pec || 'ruggeromanca@gmail.com',
+      _replyto:   data.pec || 'ruggeromanca@gmail.com',
+      _subject:   '[SRD05] ' + data.ragioneSociale + ' \u2013 ' + data.cuaa,
       message:    body,
       from_name:  data.ragioneSociale,
+      ragione_sociale: data.ragioneSociale,
+      cuaa: data.cuaa,
+      sottomisura: smL[data.sottomisura] || data.sottomisura,
+      superficie: data.superficie + ' ha',
+      titolo_possesso: titLabels[data.titoloPos] || data.titoloPos,
     }),
   });
-  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const result = await res.json().catch(() => ({}));
+  if (!res.ok || result.ok === false || result.success === false) {
+    throw new Error(result.error || result.message || ('HTTP ' + res.status));
+  }
 }
 
 // ============================================================
