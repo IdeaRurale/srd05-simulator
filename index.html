@@ -55,7 +55,7 @@
 <header class="bg-ir-f700 text-white py-4 px-6 shadow-md">
   <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center gap-4">
     <div class="shrink-0 rounded-xl bg-white/95 p-2 shadow-sm">
-      <img src="idearurale-logo.jpg" alt="IdeaRurale - Studio Tecnico Agronomico"
+      <img src="srd05-pages/idearurale-logo.jpg" alt="IdeaRurale - Studio Tecnico Agronomico"
         class="h-16 sm:h-20 w-auto object-contain"/>
     </div>
     <div>
@@ -155,36 +155,74 @@
       </div>
     </section>
 
+    <!-- SEZIONE CAT: DATI CATASTALI -->
     <section class="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
-      <div class="bg-ir-bark px-5 py-3">
+      <div class="bg-ir-bark px-5 py-3 flex items-center justify-between">
         <h2 class="text-white font-semibold text-sm uppercase tracking-wide">Dati Catastali</h2>
+        <span class="text-white/60 text-xs">Inserisci le particelle oggetto dell'intervento</span>
       </div>
-      <div class="p-5 space-y-4">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-medium text-gray-600 mb-1" for="agroFoglio">Agro / Foglio</label>
-            <input type="text" id="agroFoglio" placeholder="Es. Agro di Bari - Foglio 12"
-              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ir-f500"/>
-          </div>
-          <div>
-            <label class="block text-xs font-medium text-gray-600 mb-1" for="particella">Particella</label>
-            <input type="text" id="particella" placeholder="Es. 345"
-              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ir-f500"/>
-          </div>
+      <div class="p-5 space-y-3">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm border-collapse">
+            <thead>
+              <tr class="bg-ir-bark text-white text-xs uppercase tracking-wide">
+                <th class="px-3 py-2 text-left rounded-tl-lg font-semibold w-28">Agro</th>
+                <th class="px-3 py-2 text-left font-semibold w-20">Foglio</th>
+                <th class="px-3 py-2 text-left font-semibold w-24">Particella</th>
+                <th class="px-3 py-2 text-left font-semibold">
+                  Indichi se la particella sarà interessata per intero o in parte
+                </th>
+                <th class="px-3 py-2 text-left font-semibold w-32 rounded-tr-lg">
+                  Se in parte, quale superficie
+                </th>
+                <th class="px-3 py-2 w-8 rounded-tr-lg"></th>
+              </tr>
+            </thead>
+            <tbody id="catastaliBody">
+              <tr class="catastale-row border-b border-gray-100">
+                <td class="px-2 py-1.5">
+                  <input type="text" placeholder="es. Foggia" maxlength="40"
+                    class="w-full border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-ir-f500 cat-agro"/>
+                </td>
+                <td class="px-2 py-1.5">
+                  <input type="text" placeholder="es. 12" maxlength="10"
+                    class="w-full border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-ir-f500 cat-foglio"/>
+                </td>
+                <td class="px-2 py-1.5">
+                  <input type="text" placeholder="es. 234" maxlength="10"
+                    class="w-full border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-ir-f500 cat-particella"/>
+                </td>
+                <td class="px-2 py-1.5">
+                  <select class="w-full border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-ir-f500 cat-quota" onchange="onQuotaChange(this)">
+                    <option value="">Seleziona...</option>
+                    <option value="intero">Per intero</option>
+                    <option value="parte">In parte</option>
+                  </select>
+                </td>
+                <td class="px-2 py-1.5">
+                  <input type="number" placeholder="—" min="0.01" step="0.01"
+                    class="w-full border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-ir-f500 cat-sup hidden"
+                    title="Superficie parziale in ettari"/>
+                </td>
+                <td class="px-2 py-1.5 text-center">
+                  <button type="button" onclick="removeCatRow(this)"
+                    class="text-gray-300 hover:text-red-500 transition-colors" title="Rimuovi riga">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 space-y-3">
-          <label class="flex items-center gap-2 cursor-pointer select-none text-sm">
-            <input type="checkbox" id="parteParticella" onchange="onParticellaScopeChange()" class="w-4 h-4 accent-ir-f600"/>
-            Inserire solo parte della particella
-          </label>
-          <div id="parteParticellaWrap" class="hidden">
-            <label class="block text-xs font-medium text-gray-600 mb-1" for="superficieParticella">
-              Superficie della particella da investire a bosco (ettari)
-            </label>
-            <input type="number" id="superficieParticella" min="0.1" step="0.1" placeholder="Es. 0.80"
-              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ir-f500"/>
-          </div>
-        </div>
+        <button type="button" onclick="addCatRow()"
+          class="flex items-center gap-1.5 text-ir-bark hover:text-ir-f700 text-xs font-semibold transition-colors">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+          Aggiungi particella
+        </button>
       </div>
     </section>
 
@@ -557,13 +595,68 @@ function onTitoloChange() {
   v('anniResiduiRow').classList.toggle('hidden', !show);
 }
 
-function onParticellaScopeChange() {
-  const isPartial = checked('parteParticella');
-  const wrap = v('parteParticellaWrap');
-  const input = v('superficieParticella');
-  wrap.classList.toggle('hidden', !isPartial);
-  input.disabled = !isPartial;
-  if (!isPartial) input.value = '';
+function addCatRow() {
+  const tbody = document.getElementById('catastaliBody');
+  const tr = document.createElement('tr');
+  tr.className = 'catastale-row border-b border-gray-100';
+  tr.innerHTML = `
+    <td class="px-2 py-1.5">
+      <input type="text" placeholder="es. Foggia" maxlength="40"
+        class="w-full border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-ir-f500 cat-agro"/>
+    </td>
+    <td class="px-2 py-1.5">
+      <input type="text" placeholder="es. 12" maxlength="10"
+        class="w-full border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-ir-f500 cat-foglio"/>
+    </td>
+    <td class="px-2 py-1.5">
+      <input type="text" placeholder="es. 234" maxlength="10"
+        class="w-full border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-ir-f500 cat-particella"/>
+    </td>
+    <td class="px-2 py-1.5">
+      <select class="w-full border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-ir-f500 cat-quota" onchange="onQuotaChange(this)">
+        <option value="">Seleziona...</option>
+        <option value="intero">Per intero</option>
+        <option value="parte">In parte</option>
+      </select>
+    </td>
+    <td class="px-2 py-1.5">
+      <input type="number" placeholder="—" min="0.01" step="0.01"
+        class="w-full border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-ir-f500 cat-sup hidden"
+        title="Superficie parziale in ettari"/>
+    </td>
+    <td class="px-2 py-1.5 text-center">
+      <button type="button" onclick="removeCatRow(this)"
+        class="text-gray-300 hover:text-red-500 transition-colors" title="Rimuovi riga">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </td>`;
+  tbody.appendChild(tr);
+}
+
+function removeCatRow(btn) {
+  const rows = document.querySelectorAll('.catastale-row');
+  if (rows.length <= 1) return;
+  btn.closest('tr').remove();
+}
+
+function onQuotaChange(sel) {
+  const supInput = sel.closest('tr').querySelector('.cat-sup');
+  const isParte = sel.value === 'parte';
+  supInput.classList.toggle('hidden', !isParte);
+  supInput.required = isParte;
+  if (!isParte) supInput.value = '';
+}
+
+function getCatastaliData() {
+  return Array.from(document.querySelectorAll('.catastale-row')).map(tr => ({
+    agro:       tr.querySelector('.cat-agro').value.trim(),
+    foglio:     tr.querySelector('.cat-foglio').value.trim(),
+    particella: tr.querySelector('.cat-particella').value.trim(),
+    quota:      tr.querySelector('.cat-quota').value,
+    sup:        tr.querySelector('.cat-sup').value.trim(),
+  })).filter(r => r.agro || r.foglio || r.particella);
 }
 
 function setBadge(el, ok, pending) {
@@ -888,9 +981,10 @@ function generatePDF(data) {
   sectionBar('A - Dati di Progetto', [45, 80, 22]);  // ir-f700
   row('Sottomisura', smL[data.sottomisura] || data.sottomisura);
   row('Superficie', data.superficie + ' ha');
-  if (data.agroFoglio) row('Agro / Foglio', data.agroFoglio);
+  if (data.agro) row('Agro', data.agro);
+  if (data.foglio) row('Foglio', data.foglio);
   if (data.particella) row('Particella', data.particella);
-  row('Estensione particella', data.parteParticella ? 'Parte della particella' : 'Intera particella');
+  row('Superficie interessata', data.parteParticella ? 'Parte della particella' : 'Intera particella');
   if (data.parteParticella && data.superficieParticella > 0)
     row('Superficie da investire a bosco', data.superficieParticella + ' ha');
   row('Piante micorrizate >= 75%', data.micorrizate ? 'Si' : 'No');
@@ -976,7 +1070,7 @@ async function saveSimulation() {
 
   const sottomisura = v('sottomisura').value;
   const superficie  = parseFloat(v('superficie').value) || 0;
-  const parteParticella = checked('parteParticella');
+  const parteParticella = v('tipoParticella').value === 'parte';
   const superficieParticella = parteParticella ? (parseFloat(v('superficieParticella').value) || 0) : 0;
   const { limiteHa, limiteAssoluto, massimaleSuperficie } = getMassimali(sottomisura, superficie);
   const quotaACarico = Math.max(0, massimaleSuperficie - _importoFinanziabile);
@@ -984,11 +1078,13 @@ async function saveSimulation() {
 
   const data = {
     ragioneSociale, cuaa,
+    catastali:  getCatastaliData(),
     indirizzo:  v('indirizzo').value.trim(),
     pec:        v('pec').value.trim(),
     legaleRapp: v('legaleRapp').value.trim(),
     sottomisura, superficie,
-    agroFoglio:  v('agroFoglio').value.trim(),
+    agro:        v('agro').value.trim(),
+    foglio:      v('foglio').value.trim(),
     particella:  v('particella').value.trim(),
     parteParticella,
     superficieParticella,
@@ -1062,9 +1158,10 @@ async function sendEmail(data) {
     'DATI DI PROGETTO',
     '  Sottomisura     : ' + (smL[data.sottomisura] || data.sottomisura),
     '  Superficie      : ' + data.superficie + ' ha',
-    '  Agro / Foglio   : ' + (data.agroFoglio || '\u2014'),
+    '  Agro           : ' + (data.agro || '\u2014'),
+    '  Foglio         : ' + (data.foglio || '\u2014'),
     '  Particella      : ' + (data.particella || '\u2014'),
-    '  Estensione      : ' + (data.parteParticella ? 'Parte della particella' : 'Intera particella'),
+    '  Superficie int. : ' + (data.parteParticella ? 'Parte della particella' : 'Intera particella'),
     '  Sup. a bosco    : ' + (data.parteParticella && data.superficieParticella > 0 ? data.superficieParticella + ' ha' : '\u2014'),
     '  Micorrizate     : ' + (data.micorrizate ? 'Si' : 'No'),
     '',
@@ -1119,7 +1216,6 @@ function showToast(msg, isError) {
 }
 
 // Init
-onParticellaScopeChange();
 calc();
 </script>
 
