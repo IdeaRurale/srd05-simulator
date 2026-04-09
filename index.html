@@ -146,6 +146,31 @@
             onchange="calc()" oninput="calc()"
             class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ir-f500"/>
         </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1" for="agroFoglio">Agro / Foglio</label>
+            <input type="text" id="agroFoglio" placeholder="Es. Agro di Bari - Foglio 12"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ir-f500"/>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1" for="particella">Particella</label>
+            <input type="text" id="particella" placeholder="Es. 345"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ir-f500"/>
+          </div>
+        </div>
+        <div class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 space-y-3">
+          <label class="flex items-center gap-2 cursor-pointer select-none text-sm">
+            <input type="checkbox" id="parteParticella" onchange="onParticellaScopeChange()" class="w-4 h-4 accent-ir-f600"/>
+            Inserire solo parte della particella
+          </label>
+          <div id="parteParticellaWrap" class="hidden">
+            <label class="block text-xs font-medium text-gray-600 mb-1" for="superficieParticella">
+              Superficie della particella da investire a bosco (ettari)
+            </label>
+            <input type="number" id="superficieParticella" min="0.1" step="0.1" placeholder="Es. 0.80"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ir-f500"/>
+          </div>
+        </div>
         <div>
           <label class="flex items-center gap-2 cursor-pointer select-none text-sm">
             <input type="checkbox" id="micorrizate" onchange="calc()" class="w-4 h-4 accent-ir-f600"/>
@@ -524,6 +549,15 @@ function onTitoloChange() {
   v('anniResiduiRow').classList.toggle('hidden', !show);
 }
 
+function onParticellaScopeChange() {
+  const isPartial = checked('parteParticella');
+  const wrap = v('parteParticellaWrap');
+  const input = v('superficieParticella');
+  wrap.classList.toggle('hidden', !isPartial);
+  input.disabled = !isPartial;
+  if (!isPartial) input.value = '';
+}
+
 function setBadge(el, ok, pending) {
   if (pending) {
     el.textContent = 'DA VERIFICARE';
@@ -846,6 +880,11 @@ function generatePDF(data) {
   sectionBar('A - Dati di Progetto', [45, 80, 22]);  // ir-f700
   row('Sottomisura', smL[data.sottomisura] || data.sottomisura);
   row('Superficie', data.superficie + ' ha');
+  if (data.agroFoglio) row('Agro / Foglio', data.agroFoglio);
+  if (data.particella) row('Particella', data.particella);
+  row('Estensione particella', data.parteParticella ? 'Parte della particella' : 'Intera particella');
+  if (data.parteParticella && data.superficieParticella > 0)
+    row('Superficie da investire a bosco', data.superficieParticella + ' ha');
   row('Piante micorrizate >= 75%', data.micorrizate ? 'Si' : 'No');
 
   // Esito economico
@@ -929,6 +968,8 @@ async function saveSimulation() {
 
   const sottomisura = v('sottomisura').value;
   const superficie  = parseFloat(v('superficie').value) || 0;
+  const parteParticella = checked('parteParticella');
+  const superficieParticella = parteParticella ? (parseFloat(v('superficieParticella').value) || 0) : 0;
   const { limiteHa, limiteAssoluto, massimaleSuperficie } = getMassimali(sottomisura, superficie);
   const quotaACarico = Math.max(0, massimaleSuperficie - _importoFinanziabile);
   const titoloPos    = v('titoloPos').value;
@@ -939,6 +980,10 @@ async function saveSimulation() {
     pec:        v('pec').value.trim(),
     legaleRapp: v('legaleRapp').value.trim(),
     sottomisura, superficie,
+    agroFoglio:  v('agroFoglio').value.trim(),
+    particella:  v('particella').value.trim(),
+    parteParticella,
+    superficieParticella,
     micorrizate: checked('micorrizate'),
     eta:         v('eta').value,
     sesso:       v('sesso').value,
@@ -1009,6 +1054,10 @@ async function sendEmail(data) {
     'DATI DI PROGETTO',
     '  Sottomisura     : ' + (smL[data.sottomisura] || data.sottomisura),
     '  Superficie      : ' + data.superficie + ' ha',
+    '  Agro / Foglio   : ' + (data.agroFoglio || '\u2014'),
+    '  Particella      : ' + (data.particella || '\u2014'),
+    '  Estensione      : ' + (data.parteParticella ? 'Parte della particella' : 'Intera particella'),
+    '  Sup. a bosco    : ' + (data.parteParticella && data.superficieParticella > 0 ? data.superficieParticella + ' ha' : '\u2014'),
     '  Micorrizate     : ' + (data.micorrizate ? 'Si' : 'No'),
     '',
     'REQUISITI DI BASE',
@@ -1062,6 +1111,7 @@ function showToast(msg, isError) {
 }
 
 // Init
+onParticellaScopeChange();
 calc();
 </script>
 
