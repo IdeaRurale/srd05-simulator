@@ -55,7 +55,7 @@
 <header class="bg-ir-f700 text-white py-4 px-6 shadow-md">
   <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center gap-4">
     <div class="shrink-0 rounded-xl bg-white/95 p-2 shadow-sm">
-      <img src="idearurale-logo.jpg" alt="IdeaRurale - Studio Tecnico Agronomico"
+      <img src="srd05-pages/idearurale-logo.jpg" alt="IdeaRurale - Studio Tecnico Agronomico"
         class="h-16 sm:h-20 w-auto object-contain"/>
     </div>
     <div>
@@ -542,8 +542,10 @@
 
 <script>
 // ============================================================
-//  CONFIGURAZIONE — inserisci il tuo Access Key Web3Forms
-//  Ottieni la chiave gratuita su: https://web3forms.com
+//  CONFIGURAZIONE — inserisci il tuo endpoint Formspree
+//  1. Vai su https://formspree.io e crea un account gratuito
+//  2. Crea un nuovo form e copia l'endpoint (es. https://formspree.io/f/xabcdefg)
+//  3. Incollalo qui sotto
 // ============================================================
 const FORMSPREE_ENDPOINT = 'INSERISCI_IL_TUO_ENDPOINT_FORMSPREE';
 
@@ -981,12 +983,6 @@ function generatePDF(data) {
   sectionBar('A - Dati di Progetto', [45, 80, 22]);  // ir-f700
   row('Sottomisura', smL[data.sottomisura] || data.sottomisura);
   row('Superficie', data.superficie + ' ha');
-  if (data.agro) row('Agro', data.agro);
-  if (data.foglio) row('Foglio', data.foglio);
-  if (data.particella) row('Particella', data.particella);
-  row('Superficie interessata', data.parteParticella ? 'Parte della particella' : 'Intera particella');
-  if (data.parteParticella && data.superficieParticella > 0)
-    row('Superficie da investire a bosco', data.superficieParticella + ' ha');
   row('Piante micorrizate >= 75%', data.micorrizate ? 'Si' : 'No');
 
   // Esito economico
@@ -1070,8 +1066,6 @@ async function saveSimulation() {
 
   const sottomisura = v('sottomisura').value;
   const superficie  = parseFloat(v('superficie').value) || 0;
-  const parteParticella = v('tipoParticella').value === 'parte';
-  const superficieParticella = parteParticella ? (parseFloat(v('superficieParticella').value) || 0) : 0;
   const { limiteHa, limiteAssoluto, massimaleSuperficie } = getMassimali(sottomisura, superficie);
   const quotaACarico = Math.max(0, massimaleSuperficie - _importoFinanziabile);
   const titoloPos    = v('titoloPos').value;
@@ -1083,11 +1077,6 @@ async function saveSimulation() {
     pec:        v('pec').value.trim(),
     legaleRapp: v('legaleRapp').value.trim(),
     sottomisura, superficie,
-    agro:        v('agro').value.trim(),
-    foglio:      v('foglio').value.trim(),
-    particella:  v('particella').value.trim(),
-    parteParticella,
-    superficieParticella,
     micorrizate: checked('micorrizate'),
     eta:         v('eta').value,
     sesso:       v('sesso').value,
@@ -1116,9 +1105,10 @@ async function saveSimulation() {
     doc.save(filename);
 
     v('saveBtnLabel').textContent = 'Invio al tecnico...';
-    await sendEmail(data);
-
-    showToast('PDF scaricato e simulazione inviata al tecnico!');
+    const emailSent = await sendEmail(data);
+    showToast(emailSent
+      ? 'PDF scaricato e simulazione inviata al tecnico!'
+      : 'PDF scaricato. Invio email non configurato.', !emailSent);
   } catch (err) {
     console.error(err);
     showToast('PDF generato. Invio email non riuscito \u2014 verifica la configurazione.', true);
@@ -1134,7 +1124,7 @@ async function saveSimulation() {
 async function sendEmail(data) {
   if (FORMSPREE_ENDPOINT === 'INSERISCI_IL_TUO_ENDPOINT_FORMSPREE') {
     console.warn('Endpoint Formspree non configurato.');
-    return;
+    return false;
   }
   const smL = {
     'SRD05.1': 'SRD05.1', 'SRD05.2_lungo': 'SRD05.2 Lungo',
@@ -1158,11 +1148,10 @@ async function sendEmail(data) {
     'DATI DI PROGETTO',
     '  Sottomisura     : ' + (smL[data.sottomisura] || data.sottomisura),
     '  Superficie      : ' + data.superficie + ' ha',
-    '  Agro           : ' + (data.agro || '\u2014'),
-    '  Foglio         : ' + (data.foglio || '\u2014'),
-    '  Particella      : ' + (data.particella || '\u2014'),
-    '  Superficie int. : ' + (data.parteParticella ? 'Parte della particella' : 'Intera particella'),
-    '  Sup. a bosco    : ' + (data.parteParticella && data.superficieParticella > 0 ? data.superficieParticella + ' ha' : '\u2014'),
+    '  Particelle      : ' + (data.catastali.length > 0
+        ? data.catastali.map(r => r.agro + ' Fg.' + r.foglio + ' p.' + r.particella +
+            (r.quota === 'parte' ? ' (parte, ' + (r.sup || '?') + ' ha)' : ' (intera)')).join(' | ')
+        : '\u2014'),
     '  Micorrizate     : ' + (data.micorrizate ? 'Si' : 'No'),
     '',
     'REQUISITI DI BASE',
@@ -1197,9 +1186,10 @@ async function sendEmail(data) {
     }),
   });
   const result = await res.json().catch(() => ({}));
-  if (!res.ok || result.ok === false || result.success === false) {
-    throw new Error(result.error || result.message || ('HTTP ' + res.status));
+  if (!res.ok || result.ok === false) {
+    throw new Error((result.errors && result.errors[0] && result.errors[0].message) || ('HTTP ' + res.status));
   }
+  return true;
 }
 
 // ============================================================
