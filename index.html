@@ -545,7 +545,7 @@
 //  CONFIGURAZIONE — inserisci il tuo Access Key Web3Forms
 //  Ottieni la chiave gratuita su: https://web3forms.com
 // ============================================================
-const FORMSPREE_ENDPOINT = 'INSERISCI_IL_TUO_ENDPOINT_FORMSPREE';
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xpqoelgj';
 
 // ============================================================
 //  UTILITY
@@ -657,6 +657,19 @@ function getCatastaliData() {
     quota:      tr.querySelector('.cat-quota').value,
     sup:        tr.querySelector('.cat-sup').value.trim(),
   })).filter(r => r.agro || r.foglio || r.particella);
+}
+
+function formatCatastaleItem(item) {
+  const parts = [];
+  if (item.agro) parts.push('Agro ' + item.agro);
+  if (item.foglio) parts.push('Foglio ' + item.foglio);
+  if (item.particella) parts.push('Particella ' + item.particella);
+  if (item.quota === 'intero') parts.push('per intero');
+  if (item.quota === 'parte') {
+    parts.push('in parte');
+    if (item.sup) parts.push(item.sup + ' ha');
+  }
+  return parts.join(' - ');
 }
 
 function setBadge(el, ok, pending) {
@@ -981,12 +994,9 @@ function generatePDF(data) {
   sectionBar('A - Dati di Progetto', [45, 80, 22]);  // ir-f700
   row('Sottomisura', smL[data.sottomisura] || data.sottomisura);
   row('Superficie', data.superficie + ' ha');
-  if (data.agro) row('Agro', data.agro);
-  if (data.foglio) row('Foglio', data.foglio);
-  if (data.particella) row('Particella', data.particella);
-  row('Superficie interessata', data.parteParticella ? 'Parte della particella' : 'Intera particella');
-  if (data.parteParticella && data.superficieParticella > 0)
-    row('Superficie da investire a bosco', data.superficieParticella + ' ha');
+  if (data.catastali && data.catastali.length) {
+    data.catastali.forEach((item, idx) => row('Dati catastali ' + (idx + 1), formatCatastaleItem(item)));
+  }
   row('Piante micorrizate >= 75%', data.micorrizate ? 'Si' : 'No');
 
   // Esito economico
@@ -1070,24 +1080,18 @@ async function saveSimulation() {
 
   const sottomisura = v('sottomisura').value;
   const superficie  = parseFloat(v('superficie').value) || 0;
-  const parteParticella = v('tipoParticella').value === 'parte';
-  const superficieParticella = parteParticella ? (parseFloat(v('superficieParticella').value) || 0) : 0;
+  const catastali = getCatastaliData();
   const { limiteHa, limiteAssoluto, massimaleSuperficie } = getMassimali(sottomisura, superficie);
   const quotaACarico = Math.max(0, massimaleSuperficie - _importoFinanziabile);
   const titoloPos    = v('titoloPos').value;
 
   const data = {
     ragioneSociale, cuaa,
-    catastali:  getCatastaliData(),
+    catastali,
     indirizzo:  v('indirizzo').value.trim(),
     pec:        v('pec').value.trim(),
     legaleRapp: v('legaleRapp').value.trim(),
     sottomisura, superficie,
-    agro:        v('agro').value.trim(),
-    foglio:      v('foglio').value.trim(),
-    particella:  v('particella').value.trim(),
-    parteParticella,
-    superficieParticella,
     micorrizate: checked('micorrizate'),
     eta:         v('eta').value,
     sesso:       v('sesso').value,
@@ -1144,6 +1148,9 @@ async function sendEmail(data) {
   const titLabels = { proprieta: 'Proprieta\'', compropr: 'Comproprieta\'', affitto: 'Affitto' };
   const detail = data.scoreLines.filter(l => l.pt > 0)
     .map(l => '  +' + l.pt + '  ' + l.principio + ' - ' + l.descrizione).join('\n');
+  const catastaliLines = data.catastali && data.catastali.length
+    ? data.catastali.map((item, idx) => '  Particella ' + (idx + 1) + '  : ' + formatCatastaleItem(item))
+    : ['  Particelle      : \u2014'];
 
   const body = [
     'NUOVA SIMULAZIONE SRD05 \u2014 ' + new Date().toLocaleString('it-IT'),
@@ -1159,11 +1166,7 @@ async function sendEmail(data) {
     'DATI DI PROGETTO',
     '  Sottomisura     : ' + (smL[data.sottomisura] || data.sottomisura),
     '  Superficie      : ' + data.superficie + ' ha',
-    '  Agro           : ' + (data.agro || '\u2014'),
-    '  Foglio         : ' + (data.foglio || '\u2014'),
-    '  Particella      : ' + (data.particella || '\u2014'),
-    '  Superficie int. : ' + (data.parteParticella ? 'Parte della particella' : 'Intera particella'),
-    '  Sup. a bosco    : ' + (data.parteParticella && data.superficieParticella > 0 ? data.superficieParticella + ' ha' : '\u2014'),
+    ...catastaliLines,
     '  Micorrizate     : ' + (data.micorrizate ? 'Si' : 'No'),
     '',
     'REQUISITI DI BASE',
