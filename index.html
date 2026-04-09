@@ -146,6 +146,20 @@
             onchange="calc()" oninput="calc()"
             class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ir-f500"/>
         </div>
+        <div>
+          <label class="flex items-center gap-2 cursor-pointer select-none text-sm">
+            <input type="checkbox" id="micorrizate" onchange="calc()" class="w-4 h-4 accent-ir-f600"/>
+            Piante micorrizate &ge; 75%
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
+      <div class="bg-ir-bark px-5 py-3">
+        <h2 class="text-white font-semibold text-sm uppercase tracking-wide">Dati Catastali</h2>
+      </div>
+      <div class="p-5 space-y-4">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label class="block text-xs font-medium text-gray-600 mb-1" for="agroFoglio">Agro / Foglio</label>
@@ -170,12 +184,6 @@
             <input type="number" id="superficieParticella" min="0.1" step="0.1" placeholder="Es. 0.80"
               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ir-f500"/>
           </div>
-        </div>
-        <div>
-          <label class="flex items-center gap-2 cursor-pointer select-none text-sm">
-            <input type="checkbox" id="micorrizate" onchange="calc()" class="w-4 h-4 accent-ir-f600"/>
-            Piante micorrizate &ge; 75%
-          </label>
         </div>
       </div>
     </section>
