@@ -5,6 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Simulatore Bando SRD05 &ndash; Regione Puglia 2023-2027</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ir: {
+              cream:  '#f5f0e8',
+              bark:   '#3d3532',
+              f900:   '#1a3410',
+              f800:   '#234514',
+              f700:   '#2d5016',
+              f600:   '#3a6b23',
+              f500:   '#4a7c2f',
+              f400:   '#6aad43',
+              f200:   '#b8dca0',
+              f100:   '#ddefcb',
+              f50:    '#f0f7e8',
+              g800:   '#5c3d0a',
+              g700:   '#7a5c1e',
+              g600:   '#8b6914',
+              g500:   '#c8952a',
+              g200:   '#e8d5a0',
+              g100:   '#f5e6c3',
+              g50:    '#fdf6e3',
+            }
+          }
+        }
+      }
+    }
+  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     .sticky-results { position: sticky; top: 1.5rem; }
@@ -19,10 +49,10 @@
     .tooltip-wrap:hover .tooltip-box { display: block; }
   </style>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans min-h-screen">
+<body class="bg-ir-cream text-ir-bark font-sans min-h-screen">
 
 <!-- ===== HEADER ===== -->
-<header class="bg-green-800 text-white py-4 px-6 shadow-md">
+<header class="bg-ir-f700 text-white py-4 px-6 shadow-md">
   <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center gap-4">
     <div class="shrink-0 rounded-xl bg-white/95 p-2 shadow-sm">
       <img src="idearurale-logo.jpg" alt="IdeaRurale - Studio Tecnico Agronomico"
@@ -30,10 +60,10 @@
     </div>
     <div>
       <h1 class="text-xl font-bold tracking-tight">Simulatore Bando SRD05</h1>
-      <p class="text-green-200 text-sm">Intervento Forestale &ndash; CSR Puglia 2023-2027</p>
+      <p class="text-ir-f100 text-sm">Intervento Forestale &ndash; CSR Puglia 2023-2027</p>
     </div>
     <div class="sm:ml-auto">
-      <span class="bg-green-700 border border-green-500 text-green-100 text-xs font-semibold px-3 py-1 rounded-full">
+      <span class="bg-ir-g700 border border-ir-g500 text-ir-g50 text-xs font-semibold px-3 py-1 rounded-full">
         NON ufficiale &ndash; solo orientativo
       </span>
     </div>
@@ -42,7 +72,7 @@
 
 <!-- ===== TOAST ===== -->
 <div id="toast"
-  class="fixed top-5 right-5 z-50 hidden bg-green-700 text-white text-sm font-semibold px-5 py-3 rounded-xl shadow-lg flex items-center gap-2">
+  class="fixed top-5 right-5 z-50 hidden bg-ir-f600 text-white text-sm font-semibold px-5 py-3 rounded-xl shadow-lg flex items-center gap-2">
   <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
   </svg>
@@ -56,8 +86,8 @@
   <div class="space-y-5">
 
     <!-- SEZIONE 0: ANAGRAFICA -->
-    <section class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-      <div class="bg-slate-700 px-5 py-3">
+    <section class="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
+      <div class="bg-ir-bark px-5 py-3">
         <h2 class="text-white font-semibold text-sm uppercase tracking-wide">0 &ndash; Anagrafica Aziendale</h2>
       </div>
       <div class="p-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -94,15 +124,15 @@
     </section>
 
     <!-- SEZIONE A: DATI DI PROGETTO -->
-    <section class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-      <div class="bg-green-700 px-5 py-3">
+    <section class="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
+      <div class="bg-ir-f700 px-5 py-3">
         <h2 class="text-white font-semibold text-sm uppercase tracking-wide">A &ndash; Dati di Progetto</h2>
       </div>
       <div class="p-5 space-y-4">
         <div>
           <label class="block text-xs font-medium text-gray-600 mb-1" for="sottomisura">Sottomisura</label>
           <select id="sottomisura" onchange="calc()"
-            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ir-f500">
             <option value="SRD05.1">SRD05.1 &ndash; Imboschimento naturaliforme</option>
             <option value="SRD05.2_lungo">SRD05.2 Ciclo Medio-Lungo &ndash; Arboricoltura</option>
             <option value="SRD05.2_breve">SRD05.2 Ciclo Breve &ndash; Arboricoltura</option>
@@ -114,11 +144,11 @@
           <label class="block text-xs font-medium text-gray-600 mb-1" for="superficie">Superficie (ettari)</label>
           <input type="number" id="superficie" value="1" min="0.1" step="0.1"
             onchange="calc()" oninput="calc()"
-            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"/>
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ir-f500"/>
         </div>
         <div>
           <label class="flex items-center gap-2 cursor-pointer select-none text-sm">
-            <input type="checkbox" id="micorrizate" onchange="calc()" class="w-4 h-4 accent-green-600"/>
+            <input type="checkbox" id="micorrizate" onchange="calc()" class="w-4 h-4 accent-ir-f600"/>
             Piante micorrizate &ge; 75%
           </label>
         </div>
@@ -126,13 +156,13 @@
     </section>
 
     <!-- SEZIONE CR: CRITERI DI AMMISSIBILITA' -->
-    <section class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-      <div class="bg-rose-700 px-5 py-3">
+    <section class="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
+      <div class="bg-ir-g700 px-5 py-3">
         <h2 class="text-white font-semibold text-sm uppercase tracking-wide">Criteri di Ammissibilita' (CR)</h2>
       </div>
       <div class="p-5 space-y-4">
-        <div class="rounded-lg bg-rose-50 border border-rose-200 px-4 py-3">
-          <p class="text-xs text-rose-700 leading-relaxed">
+        <div class="rounded-lg bg-ir-g50 border border-ir-g200 px-4 py-3">
+          <p class="text-xs text-ir-g600 leading-relaxed">
             Verifica preliminare dei criteri minimi di ammissibilita'. La superficie viene letta dal campo
             <strong>"Superficie (ettari)"</strong> della sezione A.
           </p>
@@ -140,7 +170,7 @@
         <div class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
           <div class="flex items-start justify-between gap-3">
             <div>
-              <p class="text-xs font-semibold text-gray-700 uppercase tracking-wide">CR13 - Superficie minima</p>
+              <p class="text-xs font-semibold text-ir-bark uppercase tracking-wide">CR13 - Superficie minima</p>
               <p class="text-sm text-gray-600 mt-1">
                 Il progetto di imboschimento deve riguardare una superficie agricola di almeno 1 ettaro.
               </p>
@@ -157,7 +187,7 @@
               Titolo di possesso <span class="text-red-500">*</span>
             </label>
             <select id="titoloPos" onchange="onTitoloChange(); calc()"
-              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500">
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ir-g500">
               <option value="">Seleziona...</option>
               <option value="proprieta">Proprieta'</option>
               <option value="compropr">Comproprieta'</option>
@@ -169,7 +199,7 @@
               Disponibilita' di fonte irrigua regolarmente riconosciuta <span class="text-red-500">*</span>
             </label>
             <select id="fonteIrrigua" onchange="calc()"
-              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500">
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ir-g500">
               <option value="">Seleziona...</option>
               <option value="si">Si'</option>
               <option value="no">No</option>
@@ -182,7 +212,7 @@
           </label>
           <input type="number" id="anniResidui" value="15" min="1" max="99"
             onchange="calc()" oninput="calc()"
-            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500"/>
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ir-g500"/>
           <p class="text-[11px] text-gray-400 mt-1">Per l'Azione SRD05.1 sono richiesti almeno 15 anni residui in caso di affitto.</p>
         </div>
         <div id="crAlerts" class="space-y-1" aria-live="polite"></div>
@@ -190,28 +220,28 @@
     </section>
 
     <!-- SEZIONE B: DATI ECONOMICI -->
-    <section class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-      <div class="bg-blue-700 px-5 py-3">
+    <section class="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
+      <div class="bg-ir-f600 px-5 py-3">
         <h2 class="text-white font-semibold text-sm uppercase tracking-wide">B &ndash; Dati Economici</h2>
       </div>
       <div class="p-5 space-y-3">
         <!-- Massimale di progetto -->
-        <div class="rounded-lg bg-blue-50 border border-blue-200 px-4 py-3">
+        <div class="rounded-lg bg-ir-f50 border border-ir-f200 px-4 py-3">
           <div class="flex items-center justify-between gap-2">
             <div>
-              <p class="text-xs font-semibold text-blue-700 uppercase tracking-wide mb-0.5 flex items-center gap-1">
+              <p class="text-xs font-semibold text-ir-f700 uppercase tracking-wide mb-0.5 flex items-center gap-1">
                 Massimale di Progetto
                 <span class="tooltip-wrap">
-                  <svg class="w-3.5 h-3.5 text-blue-400 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg class="w-3.5 h-3.5 text-ir-f400 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                   </svg>
                   <span class="tooltip-box">Calcolato in base al Prezzario Regionale Puglia vigente. I prezzi unitari per ettaro includono manodopera, materiali e noli secondo le voci di Prezzario ufficiali.</span>
                 </span>
               </p>
-              <p class="text-xs text-blue-600" id="massimaleFormula">&ndash;</p>
-              <p class="text-[11px] text-blue-400 mt-0.5">Importo finanziabile al 100% a fondo perduto</p>
+              <p class="text-xs text-ir-f600" id="massimaleFormula">&ndash;</p>
+              <p class="text-[11px] text-ir-f400 mt-0.5">Importo finanziabile al 100% a fondo perduto</p>
             </div>
-            <span id="massimaleValore" class="text-xl font-extrabold text-blue-800 whitespace-nowrap">&ndash;</span>
+            <span id="massimaleValore" class="text-xl font-extrabold text-ir-f800 whitespace-nowrap">&ndash;</span>
           </div>
         </div>
         <!-- Note Prezzario e Spese Generali -->
@@ -228,8 +258,8 @@
     </section>
 
     <!-- SEZIONE C: DATI DEL RICHIEDENTE -->
-    <section class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-      <div class="bg-purple-700 px-5 py-3">
+    <section class="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
+      <div class="bg-ir-f500 px-5 py-3">
         <h2 class="text-white font-semibold text-sm uppercase tracking-wide">C &ndash; Dati del Richiedente</h2>
       </div>
       <div class="p-5 space-y-4">
@@ -238,12 +268,12 @@
             <label class="block text-xs font-medium text-gray-600 mb-1" for="eta">Eta'</label>
             <input type="number" id="eta" value="45" min="18" max="99"
               onchange="calc()" oninput="calc()"
-              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"/>
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ir-f500"/>
           </div>
           <div>
             <label class="block text-xs font-medium text-gray-600 mb-1" for="sesso">Sesso</label>
             <select id="sesso" onchange="calc()"
-              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ir-f500">
               <option value="M">Maschio</option>
               <option value="F">Femmina</option>
             </select>
@@ -252,7 +282,7 @@
         <div>
           <label class="block text-xs font-medium text-gray-600 mb-1" for="qualifica">Qualifica professionale</label>
           <select id="qualifica" onchange="calc()"
-            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ir-f500">
             <option value="nessuna">Nessuna qualifica specifica</option>
             <option value="CD">Coltivatore Diretto (C.D.)</option>
             <option value="IAP">Imprenditore Agricolo Professionale (I.A.P.)</option>
@@ -260,15 +290,15 @@
         </div>
         <div class="space-y-2">
           <label class="flex items-center gap-2 cursor-pointer select-none text-sm">
-            <input type="checkbox" id="coop" onchange="calc()" class="w-4 h-4 accent-purple-600"/>
+            <input type="checkbox" id="coop" onchange="calc()" class="w-4 h-4 accent-ir-f500"/>
             Aderisce a Cooperative o OP del settore
           </label>
           <label class="flex items-center gap-2 cursor-pointer select-none text-sm">
-            <input type="checkbox" id="reteInps" onchange="calc()" class="w-4 h-4 accent-purple-600"/>
+            <input type="checkbox" id="reteInps" onchange="calc()" class="w-4 h-4 accent-ir-f500"/>
             Aderisce alla Rete del lavoro agricolo di qualita' (INPS)
           </label>
           <label class="flex items-center gap-2 cursor-pointer select-none text-sm">
-            <input type="checkbox" id="altriSra" onchange="calc()" class="w-4 h-4 accent-purple-600"/>
+            <input type="checkbox" id="altriSra" onchange="calc()" class="w-4 h-4 accent-ir-f500"/>
             Aderisce ad altri Interventi SRA del CSR Puglia 2023-27
           </label>
         </div>
@@ -276,49 +306,49 @@
     </section>
 
     <!-- SEZIONE D: LOCALIZZAZIONE -->
-    <section class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-      <div class="bg-amber-700 px-5 py-3">
+    <section class="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
+      <div class="bg-ir-g700 px-5 py-3">
         <h2 class="text-white font-semibold text-sm uppercase tracking-wide">D &ndash; Localizzazione e Vincoli Territoriali</h2>
       </div>
       <div class="p-5 grid grid-cols-1 sm:grid-cols-2 gap-2">
         <label class="flex items-start gap-2 cursor-pointer select-none text-sm py-1">
-          <input type="checkbox" id="periurbana" onchange="calc()" class="w-4 h-4 accent-amber-600 mt-0.5"/>
+          <input type="checkbox" id="periurbana" onchange="calc()" class="w-4 h-4 accent-ir-g500 mt-0.5"/>
           <span>Area periurbana (&lt;500m dal perimetro urbano)</span>
         </label>
         <label class="flex items-start gap-2 cursor-pointer select-none text-sm py-1">
-          <input type="checkbox" id="rispettoBoschi" onchange="calc()" class="w-4 h-4 accent-amber-600 mt-0.5"/>
+          <input type="checkbox" id="rispettoBoschi" onchange="calc()" class="w-4 h-4 accent-ir-g500 mt-0.5"/>
           <span>Area di rispetto dei boschi</span>
         </label>
         <label class="flex items-start gap-2 cursor-pointer select-none text-sm py-1">
-          <input type="checkbox" id="costieri" onchange="calc()" class="w-4 h-4 accent-amber-600 mt-0.5"/>
+          <input type="checkbox" id="costieri" onchange="calc()" class="w-4 h-4 accent-ir-g500 mt-0.5"/>
           <span>Territori costieri o contermini ai laghi</span>
         </label>
         <label class="flex items-start gap-2 cursor-pointer select-none text-sm py-1">
-          <input type="checkbox" id="montane" onchange="calc()" class="w-4 h-4 accent-amber-600 mt-0.5"/>
+          <input type="checkbox" id="montane" onchange="calc()" class="w-4 h-4 accent-ir-g500 mt-0.5"/>
           <span>Zone Montane o Svantaggiate</span>
         </label>
         <label class="flex items-start gap-2 cursor-pointer select-none text-sm py-1">
-          <input type="checkbox" id="natura2000" onchange="calc()" class="w-4 h-4 accent-amber-600 mt-0.5"/>
+          <input type="checkbox" id="natura2000" onchange="calc()" class="w-4 h-4 accent-ir-g500 mt-0.5"/>
           <span>Aree Natura 2000 (SIC / ZSC / ZPS)</span>
         </label>
         <label class="flex items-start gap-2 cursor-pointer select-none text-sm py-1">
-          <input type="checkbox" id="zonaB" onchange="calc()" class="w-4 h-4 accent-amber-600 mt-0.5"/>
+          <input type="checkbox" id="zonaB" onchange="calc()" class="w-4 h-4 accent-ir-g500 mt-0.5"/>
           <span>Agric. intensiva specializzata (Zona B)</span>
         </label>
         <label class="flex items-start gap-2 cursor-pointer select-none text-sm py-1">
-          <input type="checkbox" id="areeProtette" onchange="calc()" class="w-4 h-4 accent-amber-600 mt-0.5"/>
+          <input type="checkbox" id="areeProtette" onchange="calc()" class="w-4 h-4 accent-ir-g500 mt-0.5"/>
           <span>Aree Protette (Parchi, Riserve)</span>
         </label>
         <label class="flex items-start gap-2 cursor-pointer select-none text-sm py-1">
-          <input type="checkbox" id="xylellaZona" onchange="calc()" class="w-4 h-4 accent-amber-600 mt-0.5"/>
+          <input type="checkbox" id="xylellaZona" onchange="calc()" class="w-4 h-4 accent-ir-g500 mt-0.5"/>
           <span>Aree infette da Xylella fastidiosa</span>
         </label>
         <label class="flex items-start gap-2 cursor-pointer select-none text-sm py-1">
-          <input type="checkbox" id="zvn" onchange="calc()" class="w-4 h-4 accent-amber-600 mt-0.5"/>
+          <input type="checkbox" id="zvn" onchange="calc()" class="w-4 h-4 accent-ir-g500 mt-0.5"/>
           <span>Zone Vulnerabili dai Nitrati (ZVN)</span>
         </label>
         <label class="flex items-start gap-2 cursor-pointer select-none text-sm py-1">
-          <input type="checkbox" id="areeD" onchange="calc()" class="w-4 h-4 accent-amber-600 mt-0.5"/>
+          <input type="checkbox" id="areeD" onchange="calc()" class="w-4 h-4 accent-ir-g500 mt-0.5"/>
           <span>Aree D (Rurali con problemi di sviluppo)</span>
         </label>
       </div>
@@ -326,7 +356,7 @@
 
     <!-- PRIVACY -->
     <label class="flex items-start gap-3 cursor-pointer bg-white border border-gray-200 rounded-xl px-4 py-3 shadow-sm select-none">
-      <input type="checkbox" id="privacy" class="w-4 h-4 accent-green-600 mt-0.5 shrink-0"/>
+      <input type="checkbox" id="privacy" class="w-4 h-4 accent-ir-f600 mt-0.5 shrink-0"/>
       <span class="text-sm text-gray-600">
         Ho letto e accetto l'informativa sulla <strong>Privacy</strong>. Autorizzo il trattamento dei dati inseriti
         ai soli fini della presente simulazione orientativa e del suo invio al tecnico di riferimento.
@@ -336,7 +366,7 @@
 
     <!-- SAVE BUTTON -->
     <button id="saveBtn" onclick="saveSimulation()"
-      class="w-full flex items-center justify-center gap-2 bg-green-700 hover:bg-green-800 active:bg-green-900 text-white font-semibold text-sm py-3 px-6 rounded-xl shadow-md transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
+      class="w-full flex items-center justify-center gap-2 bg-ir-f700 hover:bg-ir-f800 active:bg-ir-f900 text-white font-semibold text-sm py-3 px-6 rounded-xl shadow-md transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
       <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
           d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h4a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
@@ -353,8 +383,8 @@
   <div class="sticky-results h-fit space-y-5">
 
     <!-- CARD ESITO ECONOMICO -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-      <div class="bg-blue-600 px-5 py-3 flex items-center justify-between">
+    <div class="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
+      <div class="bg-ir-f700 px-5 py-3 flex items-center justify-between">
         <h2 class="text-white font-semibold text-sm uppercase tracking-wide">Esito Economico</h2>
         <span id="badgeEco" class="text-xs font-bold px-2.5 py-1 rounded-full bg-gray-200 text-gray-600">&ndash;</span>
       </div>
@@ -367,7 +397,7 @@
           <span class="text-gray-500">Limite assoluto del bando</span>
           <span id="limiteAssolutoDisplay" class="font-semibold">&ndash;</span>
         </div>
-        <div class="flex justify-between border-b pb-2 text-blue-700">
+        <div class="flex justify-between border-b pb-2 text-ir-f700">
           <span class="font-semibold">Contributo finanziabile (100%)</span>
           <span id="importoFinanziabileDisplay" class="font-bold text-lg">&ndash;</span>
         </div>
@@ -388,19 +418,19 @@
     </div>
 
     <!-- CARD PUNTEGGIO -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-      <div class="bg-green-700 px-5 py-3 flex items-center justify-between">
+    <div class="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
+      <div class="bg-ir-f600 px-5 py-3 flex items-center justify-between">
         <h2 class="text-white font-semibold text-sm uppercase tracking-wide">Punteggio Progetto</h2>
         <span id="badgeScore" class="text-xs font-bold px-2.5 py-1 rounded-full bg-gray-200 text-gray-600">&ndash;</span>
       </div>
       <div class="p-5 space-y-4">
         <div>
           <div class="flex items-end justify-between mb-1">
-            <span class="text-3xl font-extrabold text-green-800" id="scoreTotal">0</span>
+            <span class="text-3xl font-extrabold text-ir-f800" id="scoreTotal">0</span>
             <span class="text-xs text-gray-400">/ max ~98 pt &nbsp;|&nbsp; soglia min. 30 pt</span>
           </div>
           <div class="w-full bg-gray-200 rounded-full h-3 relative">
-            <div id="scoreBarFill" class="score-bar h-3 rounded-full bg-green-500" style="width:0%"></div>
+            <div id="scoreBarFill" class="score-bar h-3 rounded-full bg-ir-f500" style="width:0%"></div>
             <div class="absolute top-0 h-3 border-l-2 border-dashed border-red-400" style="left:30.6%">
               <span class="absolute -top-5 -left-3 text-[10px] text-red-500 font-bold">30</span>
             </div>
@@ -420,8 +450,8 @@
     </div>
 
     <!-- CARD CONFORMITA' BUROCRATICA -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-      <div class="bg-orange-600 px-5 py-3 flex items-center justify-between">
+    <div class="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
+      <div class="bg-ir-g700 px-5 py-3 flex items-center justify-between">
         <h2 class="text-white font-semibold text-sm uppercase tracking-wide">Verifica Requisiti</h2>
         <span id="badgeReq" class="text-xs font-bold px-2.5 py-1 rounded-full bg-gray-200 text-gray-600">&ndash;</span>
       </div>
@@ -458,8 +488,8 @@ function alertHtml(type, msg) {
   const cls = type === 'err'
     ? 'bg-red-50 border border-red-200 text-red-700'
     : type === 'ok'
-    ? 'bg-green-50 border border-green-200 text-green-700'
-    : 'bg-orange-50 border border-orange-200 text-orange-800';
+    ? 'bg-ir-f50 border border-ir-f200 text-ir-f700'
+    : 'bg-ir-g50 border border-ir-g200 text-ir-g600';
   return '<div class="rounded-md px-3 py-2 text-xs leading-relaxed ' + cls + '">' + msg + '</div>';
 }
 
@@ -502,7 +532,7 @@ function setBadge(el, ok, pending) {
   }
   el.textContent = ok ? 'OK' : 'NON CONFORME';
   el.className = 'text-xs font-bold px-2.5 py-1 rounded-full whitespace-nowrap ' +
-    (ok ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700');
+    (ok ? 'bg-ir-f100 text-ir-f700' : 'bg-red-100 text-red-700');
 }
 
 function getAmmissibilitaState() {
@@ -623,7 +653,7 @@ function calc() {
     badgeEco.className   = 'text-xs font-bold px-2.5 py-1 rounded-full bg-yellow-100 text-yellow-700';
   } else {
     badgeEco.textContent = 'IN REGOLA';
-    badgeEco.className   = 'text-xs font-bold px-2.5 py-1 rounded-full bg-green-100 text-green-700';
+    badgeEco.className   = 'text-xs font-bold px-2.5 py-1 rounded-full bg-ir-f100 text-ir-f700';
   }
 
   v('econAlerts').innerHTML = econAlertsHtml.join('');
@@ -647,10 +677,10 @@ function calc() {
   const allOk = relevantItems.every(r => r.ok);
   badgeReq.textContent = allOk ? 'CONFORME' : 'VERIFICARE';
   badgeReq.className   = 'text-xs font-bold px-2.5 py-1 rounded-full ' +
-    (allOk ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-700');
+    (allOk ? 'bg-ir-f100 text-ir-f800' : 'bg-red-100 text-red-700');
   reqSum.innerHTML = relevantItems.map(r =>
     '<div class="flex items-center gap-2 py-0.5">' +
-      '<span class="' + (r.ok ? 'text-green-500' : 'text-red-400') + '">' +
+      '<span class="' + (r.ok ? 'text-ir-f500' : 'text-red-400') + '">' +
         (r.ok
           ? '<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>'
           : '<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>') +
@@ -716,7 +746,7 @@ function calc() {
   v('scoreTotal').textContent = totalScore;
   const bar = v('scoreBarFill');
   bar.style.width = pct + '%';
-  bar.className   = 'score-bar h-3 rounded-full ' + (totalScore >= 30 ? 'bg-green-500' : 'bg-red-400');
+  bar.className   = 'score-bar h-3 rounded-full ' + (totalScore >= 30 ? 'bg-ir-f500' : 'bg-red-400');
 
   const badgeScore = v('badgeScore');
   const esitoBox   = v('esitoBox');
@@ -724,8 +754,8 @@ function calc() {
   const svgErr = '<svg class="inline w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>';
   if (totalScore >= 30) {
     badgeScore.textContent = totalScore + ' pt \u2013 AMMISSIBILE';
-    badgeScore.className   = 'text-xs font-bold px-2.5 py-1 rounded-full bg-green-100 text-green-800';
-    esitoBox.className     = 'rounded-lg px-4 py-3 text-sm font-semibold text-center bg-green-50 border border-green-200 text-green-800';
+    badgeScore.className   = 'text-xs font-bold px-2.5 py-1 rounded-full bg-ir-f100 text-ir-f800';
+    esitoBox.className     = 'rounded-lg px-4 py-3 text-sm font-semibold text-center bg-ir-f50 border border-ir-f200 text-ir-f800';
     esitoBox.innerHTML     = svgOk + 'AMMISSIBILE \u2013 Supera la soglia di sbarramento (30 pt)';
   } else {
     badgeScore.textContent = totalScore + ' pt \u2013 NON AMM.';
@@ -741,14 +771,14 @@ function calc() {
     const tot = lines.reduce((s, l) => s + l.pt, 0);
     return '<div class="px-4 py-2 bg-gray-50 flex justify-between items-center">' +
              '<span class="font-semibold text-gray-700 text-xs uppercase tracking-wide">' + principio + '</span>' +
-             '<span class="text-xs font-bold ' + (tot > 0 ? 'text-green-700' : 'text-gray-400') + '">' +
+             '<span class="text-xs font-bold ' + (tot > 0 ? 'text-ir-f700' : 'text-gray-400') + '">' +
                (tot > 0 ? '+' + tot + ' pt' : '0 pt') + '</span>' +
            '</div>' +
            lines.map(l => {
              const active = l.pt > 0;
              return '<div class="px-4 py-1.5 flex justify-between items-center gap-2 ' + (active ? '' : 'opacity-40') + '">' +
                '<span class="text-gray-600 text-xs">' + l.descrizione + '</span>' +
-               '<span class="text-xs font-mono font-bold whitespace-nowrap ' + (active ? 'text-green-700' : 'text-gray-400') + '">' +
+               '<span class="text-xs font-mono font-bold whitespace-nowrap ' + (active ? 'text-ir-f700' : 'text-gray-400') + '">' +
                  (active ? '+' + l.pt : (l.potential ? '(' + l.potential + ')' : '0')) +
                '</span></div>';
            }).join('');
@@ -780,13 +810,13 @@ function generatePDF(data) {
     doc.setFontSize(9); doc.setFont('helvetica', 'normal'); doc.setTextColor(110, 110, 110);
     tx(label, M + 3, y);
     doc.setFont('helvetica', bold ? 'bold' : 'normal');
-    doc.setTextColor(bold ? 20 : 50, bold ? 80 : 50, bold ? 20 : 50);
+    doc.setTextColor(bold ? 45 : 50, bold ? 80 : 50, bold ? 22 : 50);  // ir-f700 for bold
     tx(value, W - M - 3, y, { align: 'right' });
     y += 6;
   };
 
   // Header
-  doc.setFillColor(27, 94, 52);
+  doc.setFillColor(45, 80, 22);  // ir-f700 #2d5016
   doc.rect(0, 0, W, 26, 'F');
   doc.setFontSize(14); doc.setFont('helvetica', 'bold'); doc.setTextColor(255, 255, 255);
   tx('Simulatore Bando SRD05', M, 11);
@@ -798,7 +828,7 @@ function generatePDF(data) {
   y = 34;
 
   // Anagrafica
-  sectionBar('0 - Anagrafica Aziendale', [52, 73, 100]);
+  sectionBar('0 - Anagrafica Aziendale', [61, 53, 50]);  // ir-bark
   row('Ragione Sociale / Nome Azienda', data.ragioneSociale);
   row('CUAA / Partita IVA', data.cuaa);
   if (data.indirizzo)  row('Sede Legale', data.indirizzo);
@@ -813,17 +843,17 @@ function generatePDF(data) {
     'SRD05.3.1':     'SRD05.3.1 - Sistemi Silvoarabili',
     'SRD05.3.2':     'SRD05.3.2 - Sistemi Silvopastorali',
   };
-  sectionBar('A - Dati di Progetto', [27, 110, 60]);
+  sectionBar('A - Dati di Progetto', [45, 80, 22]);  // ir-f700
   row('Sottomisura', smL[data.sottomisura] || data.sottomisura);
   row('Superficie', data.superficie + ' ha');
   row('Piante micorrizate >= 75%', data.micorrizate ? 'Si' : 'No');
 
   // Esito economico
-  sectionBar('B - Esito Economico', [30, 80, 160]);
+  sectionBar('B - Esito Economico', [58, 107, 35]);  // ir-f600
   row('Massimale di progetto (EUR/ha x ha)', fmt(data.massimaleSuperficie));
   row('Limite assoluto del bando', fmt(data.limiteAssoluto));
   y += 1;
-  doc.setFillColor(235, 245, 255);
+  doc.setFillColor(240, 247, 232);  // ir-f50
   doc.roundedRect(M, y - 4, W - M * 2, 8, 1.5, 1.5, 'F');
   row('CONTRIBUTO FINANZIABILE (100% a fondo perduto)', fmt(data.importoFinanziabile), true);
   if (data.quotaACarico > 0) {
@@ -835,24 +865,24 @@ function generatePDF(data) {
   }
 
   // Punteggio
-  sectionBar('C - Punteggio e Criteri di Selezione', [100, 55, 25]);
+  sectionBar('C - Punteggio e Criteri di Selezione', [74, 124, 47]);  // ir-f500
   const amm = data.punteggio >= 30;
   doc.setFillColor(amm ? 220 : 255, amm ? 252 : 220, amm ? 220 : 220);
   doc.roundedRect(M, y - 3, W - M * 2, 10, 1.5, 1.5, 'F');
   doc.setFontSize(11); doc.setFont('helvetica', 'bold');
-  doc.setTextColor(amm ? 20 : 160, amm ? 110 : 20, amm ? 20 : 20);
+  doc.setTextColor(amm ? 45 : 160, amm ? 80 : 30, amm ? 22 : 22);  // ir-f700 or red
   tx(data.punteggio + ' pt  -  ' + (amm ? 'AMMISSIBILE' : 'NON AMMISSIBILE') + '  (soglia: 30 pt)', M + 4, y + 4.5);
   y += 15;
   data.scoreLines.filter(l => l.pt > 0).forEach(l => {
     doc.setFontSize(8.5); doc.setFont('helvetica', 'normal'); doc.setTextColor(80, 80, 80);
     tx('* ' + l.principio + ' - ' + l.descrizione, M + 3, y);
-    doc.setFont('helvetica', 'bold'); doc.setTextColor(20, 120, 40);
+    doc.setFont('helvetica', 'bold'); doc.setTextColor(45, 80, 22);  // ir-f700
     tx('+' + l.pt, W - M - 3, y, { align: 'right' });
     y += 5.5;
   });
 
   // Richiedente
-  sectionBar('D - Dati del Richiedente', [90, 50, 130]);
+  sectionBar('D - Dati del Richiedente', [74, 124, 47]);  // ir-f500
   const qL = { nessuna: 'Nessuna', CD: 'Coltivatore Diretto (C.D.)', IAP: 'I.A.P.' };
   row('Eta\'', data.eta + ' anni');
   row('Sesso', data.sesso === 'F' ? 'Femmina' : 'Maschio');
@@ -862,7 +892,7 @@ function generatePDF(data) {
   if (data.altriSra) row('Altri Interventi SRA', 'Si');
 
   // Criteri di ammissibilita'
-  sectionBar('CR - Criteri di Ammissibilita', [180, 80, 20]);
+  sectionBar('CR - Criteri di Ammissibilita', [122, 92, 30]);  // ir-g700
   const titLabels = { proprieta: 'Proprieta\'', compropr: 'Comproprieta\'', affitto: 'Affitto' };
   row('Titolo di possesso', titLabels[data.titoloPos] || data.titoloPos);
   if (data.titoloPos === 'affitto')
@@ -1026,7 +1056,7 @@ function showToast(msg, isError) {
   const t = v('toast');
   v('toastMsg').textContent = msg;
   t.className = 'fixed top-5 right-5 z-50 flex items-center gap-2 text-white text-sm font-semibold px-5 py-3 rounded-xl shadow-lg ' +
-                (isError ? 'bg-red-600' : 'bg-green-700');
+                (isError ? 'bg-red-600' : 'bg-ir-f600');
   if (_toastTimer) clearTimeout(_toastTimer);
   _toastTimer = setTimeout(() => t.classList.add('hidden'), 3500);
 }
